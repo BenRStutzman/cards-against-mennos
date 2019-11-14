@@ -382,12 +382,19 @@ WhiteCards = [
   'Wondering whether Square Dancing counts as Dancing',
   'Geez Magazine',
   'The Canadian Mennonite Newsmagazine',
-  'The Credit Union'
-]
+  'The Credit Union']
 
+## constants
+HANDSIZE = 7
+NUMPLAYERS = 4
+
+## initialization
+Players = []
 DiscardBlackCards = []
 DiscardWhiteCards = []
+Done = False
 
+## defining functions for later use
 def DrawTopCard(deck, isBlack):
     if len(deck) == 0:
         if isBlack:
@@ -406,7 +413,17 @@ def DrawWhiteCards(hand):
         card = DrawTopCard(WhiteCards, False)
         hand.append(card)
         DiscardWhiteCards.append(card)
-        
+
+## NOT DONE YET!!!!!!!!!!!!!!!!!
+def CheckIfDone():
+    inp = input("Do you want to continue playing? ('y'/'n'): ")
+    if inp == "y":
+        return False
+    elif inp == "n":
+        return True
+    else:
+        return CheckIfDone()
+
 class Player:
     def __init__(self):
         self.Hand = []
@@ -417,26 +434,57 @@ class Player:
         card = self.Hand.pop(index)
         return card
 
-       
-
-HANDSIZE = 7
-NUMPLAYERS = 4
-Players = []
-
+## code that plays the game
+## create an array of Players and give them a starting hand
 for i in range(NUMPLAYERS):
     NewPlayer = Player()
     Players.append(NewPlayer)
     DrawWhiteCards(Players[i].Hand)
+    ## pass each Player's hand to server
+    print("Player ", i, "'s hand: ", Players[i].Hand)
 
-
-print(Players[0].Hand, Players[1].Hand)
-#for i in range(0, 50):
-    #DrawWhiteCards(hand)
-    #hand = []
-    #print("hand: ", len(hand))
-    #print("WhiteCards: ", len(WhiteCards))
-    #print("DiscardWhiteCards: ", len(DiscardWhiteCards))
-
-
-
+CardElderPosition = NUMPLAYERS - 1
+while not Done:
+    ## initialize
+    PlayedCards = []
     
+    ## increment CardElderPosition
+    CardElderPosition += 1
+    #print("BUGTEST", CardElderPosition)
+    if CardElderPosition > (NUMPLAYERS - 1):
+        CardElderPosition = 0
+    print("JUDGE FOR THIS ROUND IS: ", CardElderPosition)
+    ## pass one BlackCard to server
+    JudgesCard = DrawTopCard(BlackCards, True)
+    print("JUDGES CARD: ", JudgesCard)
+    ## recieve an array of positions from server and play the cards at those positions
+    ## while we don't have a server to do this
+    for i in range(NUMPLAYERS):
+        print("PLAYER NUMBER: ", i)
+        position = int(input("Which card do you want to play? (give an index): "))
+        if position < HANDSIZE:
+            PlayedCards.append((Players[i].PlayWhiteCard(position), i))
+            
+    ## pass PlayedCards to server
+    print(PlayedCards)
+    ## receive which index of PlayedCards won
+    WinningIndex = int(input("Which card won? (give an index: "))
+    ## increment winners score
+    Players[PlayedCards[WinningIndex][1]].Score += 1
+    ## add BlackCard to that players pile of BlackCardsWon
+    Players[PlayedCards[WinningIndex][1]].BlackCardsWon.append(JudgesCard)
+    ## check if done playing
+    Done = CheckIfDone()
+    ## everyone draw up to handsize
+    for i in range(NUMPLAYERS):
+        DrawWhiteCards(Players[i].Hand)
+        ## pass each Player's new hand to server
+        print("Player ", i, "'s hand: ", Players[i].Hand)
+        
+## check player scores and BlackCardsWon
+for i in range(NUMPLAYERS):
+    print(i)
+    print("Score: ", Players[i].Score)
+    print("Black Cards Earned: ", Players[i].BlackCardsWon)
+
+
