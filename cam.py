@@ -442,6 +442,10 @@ class Player:
     def PlayWhiteCard(self, index):
         card = self.Hand.pop(index)
         return card
+
+    def Mulligan(self):
+        self.Hand = []
+        DrawWhiteCards(self.Hand)
     
 ## Set constants
 ## get from server or something
