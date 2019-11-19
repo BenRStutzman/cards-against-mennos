@@ -34,4 +34,4 @@ class GameClient(ConnectionListener):
         sys.exit()
 
     def Network_event(self, data):
-        self.events.put((data['event'], data['details']))
+        self.events.put((data['event'], data['details'], data['time_lim']))

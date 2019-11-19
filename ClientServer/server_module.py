@@ -51,15 +51,17 @@ class GameServer(Server):
 
     def DelPlayer(self, player):
         del self.players[player.ID]
+        print("Player %s has left the game." % player.ID)
 
-    def send_to_player(self, ID, event, details):
+    def send_to_player(self, ID, event, details, time_lim):
         if ID in self.players:
-            self.players[ID].Send({'action': 'event', 'event': event, 'details': details})
+            self.players[ID].Send({'action': 'event', 'event': event,
+                                    'details': details, 'time_lim': time_lim})
             return True
         else:
             return False
 
-    def send_to_all(self, event, details, exclude = ""):
+    def send_to_all(self, event, details, time_lim, exclude = ""):
         for ID in self.players.copy():
             if ID != exclude:
-                self.send_to_player(ID, event, details)
+                self.send_to_player(ID, event, details, time_lim)

@@ -14,9 +14,9 @@ try:
             if client.events.empty():
                 print("No new events have been received.")
             while not client.events.empty():
-                event, details = client.events.get()
+                event, details, time_lim = client.events.get()
                 # Then do whatever you want with those; I'll just print them here
-                print(event + ": " + details)
+                print(event + ": " + details + ": " + str(time_lim))
         elif inp.lower() == 's':
             # To send an event to the server, do this.
             # This will add an event to the
@@ -26,6 +26,6 @@ try:
             client.send(event, details)
 
 except:
-    print("Something went wrong; exiting game")
+    print("\n\nExiting game")
 
 client.stop()
