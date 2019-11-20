@@ -1,31 +1,30 @@
-from client_module import GameClient
+from client_module import GameClient, timed_input
+import sys, msvcrt
 
-try:
+keep_playing = 'y'
+
+while keep_playing.lower() == 'y':
     host = input("Enter the host computer's IP address: ")
     port = input("Enter the port # being used on the host computer: ")
     client = GameClient(host, int(port))
+    event = ''
 
-    # This while loop is just to demonstrate how to send/receive events;
-    # the loop itself isn't necessary.
-    while True:
-        inp = input("Press V to view events or S to send one to the server: ")
-        if inp.lower() == 'v':
-            # to receive an event from the server:
-            if client.events.empty():
-                print("No new events have been received.")
-            while not client.events.empty():
-                event, details, time_lim = client.events.get()
-                # Then do whatever you want with those; I'll just print them here
-                print(event + ": " + details + ": " + str(time_lim))
-        elif inp.lower() == 's':
-            # To send an event to the server, do this.
-            # This will add an event to the
-            # "events" queue of the server, which can decide what to do with them.
-            event = input("Enter event type: ")
-            details = input("Enter event details: ")
-            client.send(event, details)
+    while event != 'server closed':
+        while client.events.empty():
+            continue
+        event, details, time_lim, num_chars = client.events.get()
+        print(event, end = '')
+        if details:
+            print(':\n' + details)
+        else:
+            print()
+        if time_lim > 0 and num_chars > 0:
+            response = timed_input(
+                    str.format("Give a %d-character response within %d seconds: "
+                    % (num_chars, time_lim)), time_lim, num_chars)
+            client.send(response)
 
-except:
-    print("\n\nExiting game")
-
-client.stop()
+    client.stop()
+    while msvcrt.kbhit(): #clears all previous keypresses
+        msvcrt.getch()
+    keep_playing = input("Play again (y/n)? ")

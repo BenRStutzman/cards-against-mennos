@@ -3,6 +3,7 @@ import sys
 import time
 from PodSixNet.Connection import connection, ConnectionListener
 import threading
+import msvcrt
 
 class GameClient(ConnectionListener):
 
@@ -11,11 +12,12 @@ class GameClient(ConnectionListener):
         self.events = Queue()
         self.stop_threads = False
         self.loop = threading.Thread(target = self.keep_pumping)
+        self.loop.daemon = True
         self.loop.start()
         print("You've joined the game.")
 
-    def send(self, event, details):
-        connection.Send({'action': 'event', 'event': event, 'details': details})
+    def send(self, response):
+        connection.Send({'action': 'response', 'response': response})
 
     def stop(self):
         self.stop_threads = True
@@ -30,8 +32,26 @@ class GameClient(ConnectionListener):
         connection.Close()
 
     def Network_disconnected(self, data):
-        print('Server disconnected')
-        sys.exit()
+        self.events.put(('server closed', '', -1, -1))
 
     def Network_event(self, data):
-        self.events.put((data['event'], data['details'], data['time_lim']))
+        self.events.put((data['event'], data['details'], data['time_lim'],
+                        data['num_chars']))
+
+def timed_input(prompt, time_lim, num_chars = 1):
+    while msvcrt.kbhit():
+        msvcrt.getch()
+    start_time = time.time()
+    print(prompt)
+    response = ''
+
+    while time.time() - start_time < time_lim:
+        if msvcrt.kbhit():
+            char = msvcrt.getwch()
+            print(char)
+            response += char
+            if len(response) == num_chars:
+                return response
+    else:
+        print('Too late!')
+        return 'no response'
