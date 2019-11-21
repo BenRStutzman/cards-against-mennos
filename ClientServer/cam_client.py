@@ -15,7 +15,7 @@ while keep_playing.lower() == 'y':
         event, details, time_lim, num_chars = client.events.get()
         print(event, end = '')
         if details:
-            print(':\n' + details)
+            print(':', details)
         else:
             print()
         if time_lim > 0 and num_chars > 0:
