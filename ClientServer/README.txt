@@ -1,11 +1,3 @@
-cards-against-mennos
-
-A Software Engineering Project by Austin Engle, Dan Hackman, Isaac Andreas, and Ben Stutzman
-
-Dan and Isaac: Game Logic
-Ben: Client-server stuff
-Austin: Javascript/display
-
 Instructions for using the Client-Server system.
 
 I. Add game logic to the cam_server.py file. It has the basic template ready,
