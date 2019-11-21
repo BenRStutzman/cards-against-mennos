@@ -2,7 +2,7 @@ from server_module import *
 
 # Please see README for how to add game logic to this program
 
-host = "10.6.26.177"
+host = "10.6.28.148"
 port = 1000
 server = open_server(host, port)
 
@@ -16,6 +16,9 @@ server.send_event('Welcome to Cards Against Mennonites!')
 
 
 # Do stuff to make the game happen
+
+
+
 # (See README for what server functions are available)
 
 
