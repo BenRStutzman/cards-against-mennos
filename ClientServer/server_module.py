@@ -5,6 +5,23 @@ from queue import Queue
 from PodSixNet.Server import Server
 from PodSixNet.Channel import Channel
 
+def update_users(usernames, winner):
+    f = open('user_list.txt', 'r+')
+    users = {username: [int(num) for num in [games_played, games_won]] for username, games_played,
+            games_won in [line.split() for line in f.read().splitlines()]}
+    print(users)
+    for username in usernames:
+        games, wins = users.get(username, (0, 0))
+        games += 1
+        if username == winner:
+            wins += 1
+        users[username] = games, wins
+    f.seek(0)
+    for username, (games, wins) in users.items():
+        f.write('%s %d %d\n' % (username, games, wins))
+    f.close()
+    return users
+
 def open_server(host, port):
     # host is a string and port is an integer
     global server
@@ -72,7 +89,7 @@ class GameServer(Server):
         else:
             return False
 
-    def send_to_all(self, event, details, time_lim, num_chars, exclude = ""):
+    def send_to_all(self, event, details, time_lim, num_chars, exclude = -1):
         for ID in self.players.copy():
             if ID != exclude:
                 self.send_to_player(ID, event, details, time_lim, num_chars, from_all = True)
@@ -105,3 +122,10 @@ class GameServer(Server):
     def clear_responses(self):
         self.responses.queue.clear() #clears all responses before this
         print("responses have been cleared")
+
+    def send_score_totals(self, score_totals):
+        #score_totals is a dictionary with {ID: [games_played, games_won]}
+        for player, ID in self.players.items():
+            games_played, games_won = [str(num) for num in  score_totals[ID]]
+            self.send_event('Your score totals:', details = games_played +
+            'games played, ' + games_won + ' games won')

@@ -1,12 +1,15 @@
 from client_module import GameClient, timed_input
 import sys, msvcrt
 
+username = input("Enter your username: ")
+
 keep_playing = 'y'
 
 while keep_playing.lower() == 'y':
     host = input("Enter the host computer's IP address: ")
     port = input("Enter the port # being used on the host computer: ")
     client = GameClient(host, int(port))
+    client.send(username)
     event = ''
 
     while event != 'server closed':
