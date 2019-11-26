@@ -80,7 +80,8 @@ def CheckIfDone():
     ## points to win
     for i in range(len(Players)):
         if Players[i].Score >= POINTSTOWIN:
-            print("\nPlayer ", i, " won!")
+            server.send_event("Player " + str(i) + " won!")
+            #print("\nPlayer ", i, " won!")
             return True
     return False
 
@@ -106,7 +107,103 @@ for i in range(NUMPLAYERS):
     DrawWhiteCards(Players[i].Hand)
     ## pass each Player's hand to server
     ## handy way to make a list a string found from https://www.decalage.info/en/python/print_list
-    server.send_event("Your hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
+    ##server.send_event("Your hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
+
+# Play the game
+CardElderPosition = NUMPLAYERS - 1
+while not Done:
+    ## everyone draw up to handsize
+    for i in range(NUMPLAYERS):
+        DrawWhiteCards(Players[i].Hand)
+        ## pass each Player's new hand to server
+        server.send_event("Your hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
+        
+    ## initialize
+    PlayedCards = []
+    
+    ## increment CardElderPosition
+    CardElderPosition += 1
+    #print("BUGTEST", CardElderPosition)
+    if CardElderPosition > (NUMPLAYERS - 1):
+        CardElderPosition = 0
+    server.send_event("JUDGE FOR THIS ROUND IS: " + str(CardElderPosition))
+    ## pass one BlackCard to server
+    JudgesCard = DrawTopCard(BlackCards, True)
+    ## check if black card is play 2
+    IsPlayTwo = (-1 != JudgesCard.find("(pick 2)"))
+    #print("IsPlayTwo?: ", IsPlayTwo)
+    server.send_event("JUDGES CARD: " + str(JudgesCard))
+    ## recieve an array of positions from server and play the cards at those positions
+    ## while we don't have a server to do this
+##server.event
+
+
+    if IsPlayTwo:
+        server.send_event('Which cards do you want to play? (give two indexes; ie: 2 3; first index is first blank):', time_lim = 10, num_chars = 3, exclude = CardElderPosition)
+        PlayedCardsA = server.get_responses()
+    else:
+        server.send_event('Which cards do you want to play? (give one index):', time_lim = 10, num_chars = 1, exclude = CardElderPosition)
+        PlayedCardsA = server.get_responses()
+
+    for i in range(len(PlayedCardsA)):
+        if IsPlayTwo:
+            positions = PlayedCardsA[i].split()
+            Card1 = Players[i].Hand[int(positions[0])]
+            Card2 = Players[i].Hand[int(positions[1])]                                
+            PlayedCardsB.append((Card1,Card2,i))
+        else:
+            PlayedCardsB.append((Players[i].Hand[int(PlayedCardsA[i])],i))
+
+
+##    for i in range(NUMPLAYERS):
+##        if i != CardElderPosition:
+##            print("PLAYER NUMBER ", i, "'s turn:")
+##            if IsPlayTwo:
+##                position = input("Which cards do you want to play? (give two indexes; ie: 2 3; first index is first blank): ")
+##
+##
+##                positions = position.split()
+##                print(positions)
+##                Card1 = Players[i].Hand[int(positions[0])]
+##                Card2 = Players[i].Hand[int(positions[1])]                                
+##                PlayedCards.append((Card1, Card2, i))
+##                if positions[0] > positions[1]:
+##                    Players[i].PlayWhiteCard(int(positions[0]))
+##                    Players[i].PlayWhiteCard(int(positions[1]))
+##                else:
+##                    Players[i].PlayWhiteCard(int(positions[1]))
+##                    Players[i].PlayWhiteCard(int(positions[0]))
+##            else:
+##                position = int(input("Which card do you want to play? (give an index): "))
+##                PlayedCards.append((Players[i].PlayWhiteCard(position), i))
+##            
+    ## pass PlayedCards to server
+    ## make a shuffled list of PlayedCards to give to judge
+    toJudge = random.shuffle(PlayedCardsB)
+    for thing in toJudge:
+        thing = list(thing).remove(-1)
+    server.send_event("Here are your choices (give the index of the winning card): " + str(toJudge).strip('[]'), time_lim = 10, num_chars = 1, player_ID = CardElderPosition)
+    WinningIndex = server.get_responses()
+    WinningCard = toJudge[WinningIndex]
+    WinningPlayer = list(PlayededCardsB[PlayedCardsB.index(WinningCard)])[-1]
+    #WinningIndex = int(input("Which card won? (give an index: "))
+    ## increment winners score
+    Players[WinningPlayer].Score += 1
+    ## add BlackCard to that players pile of BlackCardsWon
+    Players[WinningPlayer].BlackCardsWon.append(JudgesCard)
+    ## check if done playing
+    Done = CheckIfDone()
+    
+        
+## check player scores and BlackCardsWon
+for i in range(NUMPLAYERS):
+    server.send_event("Your score: " + str(Players[i].Score), player_ID = i)
+    server.send_event("Black Cards Earned: " + str(Players[i].BlackCardsWon).strip('[]'), player_ID = i)
+
+
+
+
+
 
     
     #print("Player ", i, "'s hand: ", Players[i].Hand)
@@ -115,7 +212,7 @@ for i in range(NUMPLAYERS):
 
 
 # just an example of getting responses
-#server.send_event('What is your favorite letter?', time_lim = 10, num_chars = 1)
+#server.send_event('What is your favorite letter?', time_lim = 10, num_chars = 1, exclude = )
 #responses = server.get_responses()
 #for player, response in responses:
     #print("Player %s chose '%s'" % (player, response))
