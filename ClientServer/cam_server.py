@@ -7,7 +7,7 @@ import random
 ## Pregame stuff 
 
 ## Server stuff
-host = "10.6.28.148"
+host = "10.6.28.230"
 port = 1000
 server = open_server(host, port)
 
@@ -15,11 +15,13 @@ server = open_server(host, port)
 HANDSIZE = 7
 NUMPLAYERS = 4
 POINTSTOWIN = 2
+TIME_LIMIT = 20
 
 ## Set constants
 #HANDSIZE = int(input("What handsize do you want to play with? (please be reasonable): "))
 NUMPLAYERS = int(input("How many players want to play?: "))
 #POINTSTOWIN = int(input("How many points do you need to win?: "))
+#TIME_LIMIT = int(input("What do you want the time limit to be?: "))
 
 print("Waiting for players...")
 while len(server.players) < NUMPLAYERS: #wait till you have enough players
@@ -139,20 +141,22 @@ while not Done:
 
 
     if IsPlayTwo:
-        server.send_event('Which cards do you want to play? (give two indexes; ie: 2 3; first index is first blank):', time_lim = 10, num_chars = 3, exclude = CardElderPosition)
-        PlayedCardsA = server.get_responses()
+        server.send_event('Which cards do you want to play? (first index is first blank):', time_lim = TIME_LIMIT, num_chars = 3, exclude = CardElderPosition)
+        PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
     else:
-        server.send_event('Which cards do you want to play? (give one index):', time_lim = 10, num_chars = 1, exclude = CardElderPosition)
-        PlayedCardsA = server.get_responses()
+        server.send_event('Which cards do you want to play? (give one index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
+        PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
 
+    print(PlayedCardsA)
+    PlayedCardsB = []
     for i in range(len(PlayedCardsA)):
         if IsPlayTwo:
-            positions = PlayedCardsA[i].split()
+            positions = list(PlayedCardsA[i])[1].split()
             Card1 = Players[i].Hand[int(positions[0])]
             Card2 = Players[i].Hand[int(positions[1])]                                
             PlayedCardsB.append((Card1,Card2,i))
         else:
-            PlayedCardsB.append((Players[i].Hand[int(PlayedCardsA[i])],i))
+            PlayedCardsB.append((Players[i].Hand[int(list(PlayedCardsA[i])[1])],i))
 
 
 ##    for i in range(NUMPLAYERS):
@@ -180,13 +184,14 @@ while not Done:
     ## pass PlayedCards to server
     ## make a shuffled list of PlayedCards to give to judge
     toJudge = random.shuffle(PlayedCardsB)
+    print(toJudge)
     for thing in toJudge:
         thing = list(thing).remove(-1)
-    server.send_event("Here are your choices (give the index of the winning card): " + str(toJudge).strip('[]'), time_lim = 10, num_chars = 1, player_ID = CardElderPosition)
-    WinningIndex = server.get_responses()
+    server.send_event("Here are your choices (give the index of the winning card): " + str(toJudge).strip('[]'), time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
+    WinningIndex = server.get_responses(num_needed = 1)
     WinningCard = toJudge[WinningIndex]
     WinningPlayer = list(PlayededCardsB[PlayedCardsB.index(WinningCard)])[-1]
-    #WinningIndex = int(input("Which card won? (give an index: "))
+    server.send_event("Player " + str(WinningPlayer) + "'s card: " + WinningCard + " won!")
     ## increment winners score
     Players[WinningPlayer].Score += 1
     ## add BlackCard to that players pile of BlackCardsWon
