@@ -5,22 +5,27 @@ from queue import Queue
 from PodSixNet.Server import Server
 from PodSixNet.Channel import Channel
 
-def update_users(usernames, winner):
+def update_scores(cur_players, winner_ID):
     f = open('user_list.txt', 'r+')
-    users = {username: [int(num) for num in [games_played, games_won]] for username, games_played,
+
+    # reading
+    scores = {username: [int(num) for num in [games_played, games_won]] for username, games_played,
             games_won in [line.split() for line in f.read().splitlines()]}
-    print(users)
-    for username in usernames:
-        games, wins = users.get(username, (0, 0))
+
+    # updating
+    for player in cur_players:
+        games, wins = scores.get(player.username, (0, 0))
         games += 1
-        if username == winner:
+        if player.ID == winner_ID:
             wins += 1
-        users[username] = games, wins
+        scores[player.username] = games, wins
+
+    # writing
     f.seek(0)
-    for username, (games, wins) in users.items():
+    for username, (games, wins) in scores.items():
         f.write('%s %d %d\n' % (username, games, wins))
     f.close()
-    return users
+    return {player.ID: scores[player.username] for player in cur_players}
 
 def open_server(host, port):
     # host is a string and port is an integer
@@ -38,6 +43,7 @@ class ClientChannel(Channel):
         while i in self._server.players:
             i += 1
         self.ID = i
+        self.username = 'anonymous'
 
     def Close(self):
         self._server.DelPlayer(self)
@@ -70,7 +76,7 @@ class GameServer(Server):
     def AddPlayer(self, player):
         self.players[player.ID] = player
         print("(Player %s has joined the game)" % player.ID)
-        self.send_event("You are player #", details = str(player.ID), player_ID = player.ID)
+        #self.send_event("You are player #", details = str(player.ID), player_ID = player.ID)
 
     def DelPlayer(self, player):
         del self.players[player.ID]
@@ -95,7 +101,8 @@ class GameServer(Server):
                 self.send_to_player(ID, event, details, time_lim, num_chars, from_all = True)
         if details:
             details = ": " + details
-        print("'%s%s' sent to all players" % (event, details))
+        addition = ' except player ' + str(exclude) if exclude >= 0 else ''
+        print("'%s%s' sent to everyone%s" % (event, details, addition))
 
     def close(self):
         print("Server closed.")
@@ -110,12 +117,15 @@ class GameServer(Server):
             pass
         while not self.responses.empty():
             response_list.append(self.responses.get())
-        return sorted(response_list)
+        responses = {ID: response for ID, response in sorted(response_list)}
+        for player_ID, response in responses.items():
+            print("Player %s responded '%s'" % (player_ID, response))
+        return responses
 
     def send_event(self, event, details = '', player_ID = -1, time_lim = -1,
-                    num_chars = -1):
+                    num_chars = -1, exclude = -1):
         if player_ID == -1:
-            self.send_to_all(event, details, time_lim, num_chars)
+            self.send_to_all(event, details, time_lim, num_chars, exclude)
         else:
             self.send_to_player(player_ID, event, details, time_lim, num_chars)
 
@@ -123,9 +133,13 @@ class GameServer(Server):
         self.responses.queue.clear() #clears all responses before this
         print("responses have been cleared")
 
-    def send_score_totals(self, score_totals):
-        #score_totals is a dictionary with {ID: [games_played, games_won]}
-        for player, ID in self.players.items():
-            games_played, games_won = [str(num) for num in  score_totals[ID]]
-            self.send_event('Your score totals:', details = games_played +
-            'games played, ' + games_won + ' games won')
+    def send_scores(self, score_totals):
+        #score_totals is a dictionary with {player_ID: [games_played, games_won]}
+        for player_ID in self.players:
+            games_played, games_won = score_totals[player_ID]
+            plural1 = 's' if games_played > 1 else ''
+            plural2 = 's' if games_won > 1 else ''
+            details = str.format('%d game%s played, %d game%s won' %
+                            (games_played, plural1, games_won, plural2))
+            self.send_event('Your score totals', details = details,
+                            player_ID = player_ID)
