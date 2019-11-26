@@ -72,7 +72,7 @@ class GameServer(Server):
         else:
             return False
 
-    def send_to_all(self, event, details, time_lim, num_chars, exclude = ""):
+    def send_to_all(self, event, details, time_lim, num_chars, exclude = -1):
         for ID in self.players.copy():
             if ID != exclude:
                 self.send_to_player(ID, event, details, time_lim, num_chars, from_all = True)
