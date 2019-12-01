@@ -7,7 +7,7 @@ import random
 ## Pregame stuff 
 
 ## Server stuff
-host = "10.6.28.230"
+host = "10.6.28.148"
 port = 1000
 server = open_server(host, port)
 
@@ -15,7 +15,7 @@ server = open_server(host, port)
 HANDSIZE = 7
 NUMPLAYERS = 4
 POINTSTOWIN = 2
-TIME_LIMIT = 20
+TIME_LIMIT = 300
 
 ## Set constants
 #HANDSIZE = int(input("What handsize do you want to play with? (please be reasonable): "))
@@ -82,7 +82,7 @@ def CheckIfDone():
     ## points to win
     for i in range(len(Players)):
         if Players[i].Score >= POINTSTOWIN:
-            server.send_event("Player " + str(i) + " won!")
+            server.send_event("\n\nPlayer " + str(i) + " won!")
             #print("\nPlayer ", i, " won!")
             return True
     return False
@@ -117,81 +117,76 @@ while not Done:
     ## everyone draw up to handsize
     for i in range(NUMPLAYERS):
         DrawWhiteCards(Players[i].Hand)
-        ## pass each Player's new hand to server
-        server.send_event("Your hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
+        ## pass each Player their hand
+        server.send_event("\nYour hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
         
     ## initialize
     PlayedCards = []
     
     ## increment CardElderPosition
     CardElderPosition += 1
-    #print("BUGTEST", CardElderPosition)
     if CardElderPosition > (NUMPLAYERS - 1):
         CardElderPosition = 0
-    server.send_event("JUDGE FOR THIS ROUND IS: " + str(CardElderPosition))
-    ## pass one BlackCard to server
+    server.send_event("\n\nJUDGE FOR THIS ROUND IS: Player " + str(CardElderPosition))
+    ## draw a black card
     JudgesCard = DrawTopCard(BlackCards, True)
+    ## for testing pick 2 cards
+    #JudgesCard = "Yes, my belief in _________ is consistent with my belief in __________. (pick 2)"
     ## check if black card is play 2
     IsPlayTwo = (-1 != JudgesCard.find("(pick 2)"))
-    #print("IsPlayTwo?: ", IsPlayTwo)
-    server.send_event("JUDGES CARD: " + str(JudgesCard))
-    ## recieve an array of positions from server and play the cards at those positions
-    ## while we don't have a server to do this
-##server.event
+    ## send every one the black card
+    server.send_event("\nJUDGES CARD: " + str(JudgesCard))
 
-
+    ## retrieve the cards players want to play
     if IsPlayTwo:
-        server.send_event('Which cards do you want to play? (first index is first blank):', time_lim = TIME_LIMIT, num_chars = 3, exclude = CardElderPosition)
+        server.send_event('\nWhich cards do you want to play? (first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
     else:
-        server.send_event('Which cards do you want to play? (give one index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
+        server.send_event('\nWhich card do you want to play? (give the index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
 
-    print(PlayedCardsA)
-    PlayedCardsB = []
+    ## organize played cards data so it is easier to work with
+    #PlayedCardsB = []
+    PlayedCardsB = {}
     for i in range(len(PlayedCardsA)):
+        PlayerSubmitting = PlayedCardsA[i][0]
         if IsPlayTwo:
-            positions = list(PlayedCardsA[i])[1].split()
-            Card1 = Players[i].Hand[int(positions[0])]
-            Card2 = Players[i].Hand[int(positions[1])]                                
-            PlayedCardsB.append((Card1,Card2,i))
+            positions = list(PlayedCardsA[i])[1]
+            Card1 = Players[PlayerSubmitting].Hand[int(positions[0])]
+            Card2 = Players[PlayerSubmitting].Hand[int(positions[1])]
+            ## need to play the card with a greater index first so it doesn't mess up the index of the other card
+            if positions[0] > positions[1]:
+                Players[PlayerSubmitting].PlayWhiteCard(int(positions[0]))
+                Players[PlayerSubmitting].PlayWhiteCard(int(positions[1]))
+            else:
+                Players[PlayerSubmitting].PlayWhiteCard(int(positions[1]))
+                Players[PlayerSubmitting].PlayWhiteCard(int(positions[0]))
+            #PlayedCardsB.append((Card1,Card2,PlayerSubmitting))
+            PlayedCardsB[(Card1,Card2)] = PlayerSubmitting
         else:
-            PlayedCardsB.append((Players[i].Hand[int(list(PlayedCardsA[i])[1])],i))
+            Card1 = Players[PlayerSubmitting].PlayWhiteCard(int(list(PlayedCardsA[i])[1]))
+            #PlayedCardsB.append((Card1,PlayerSubmitting))
+            PlayedCardsB[Card1] = PlayerSubmitting
 
-
-##    for i in range(NUMPLAYERS):
-##        if i != CardElderPosition:
-##            print("PLAYER NUMBER ", i, "'s turn:")
-##            if IsPlayTwo:
-##                position = input("Which cards do you want to play? (give two indexes; ie: 2 3; first index is first blank): ")
-##
-##
-##                positions = position.split()
-##                print(positions)
-##                Card1 = Players[i].Hand[int(positions[0])]
-##                Card2 = Players[i].Hand[int(positions[1])]                                
-##                PlayedCards.append((Card1, Card2, i))
-##                if positions[0] > positions[1]:
-##                    Players[i].PlayWhiteCard(int(positions[0]))
-##                    Players[i].PlayWhiteCard(int(positions[1]))
-##                else:
-##                    Players[i].PlayWhiteCard(int(positions[1]))
-##                    Players[i].PlayWhiteCard(int(positions[0]))
-##            else:
-##                position = int(input("Which card do you want to play? (give an index): "))
-##                PlayedCards.append((Players[i].PlayWhiteCard(position), i))
-##            
-    ## pass PlayedCards to server
     ## make a shuffled list of PlayedCards to give to judge
-    toJudge = random.shuffle(PlayedCardsB)
-    print(toJudge)
-    for thing in toJudge:
-        thing = list(thing).remove(-1)
-    server.send_event("Here are your choices (give the index of the winning card): " + str(toJudge).strip('[]'), time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
-    WinningIndex = server.get_responses(num_needed = 1)
-    WinningCard = toJudge[WinningIndex]
-    WinningPlayer = list(PlayededCardsB[PlayedCardsB.index(WinningCard)])[-1]
-    server.send_event("Player " + str(WinningPlayer) + "'s card: " + WinningCard + " won!")
+    keys =  list(PlayedCardsB.keys())
+    random.shuffle(keys)
+    toJudge = []
+    ## strip off the end part of the tuples that says who sent the card
+    for key in keys:
+        #thing = list(thing)
+        #thing.pop(len(thing) - 1)
+        #thing = thing[0]
+        toJudge.append(key)
+    server.send_event("\nHere are the choices: " + str(toJudge).strip('[]'))
+    server.send_event("Which card won? (give the index):", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
+    WinningIndexRaw = server.get_responses(num_needed = 1)
+    WinningIndex = WinningIndexRaw[0][1]
+    WinningCard = toJudge[int(WinningIndex)]
+    ## find the player that submitted the winning card
+    #WinningPlayer = list(PlayedCardsB[PlayedCardsB.index(WinningCard)])[-1]
+    WinningPlayer = PlayedCardsB[WinningCard]        
+    server.send_event("The judge chose player " + str(WinningPlayer) + "'s submission: " + str(WinningCard) + "!")
     ## increment winners score
     Players[WinningPlayer].Score += 1
     ## add BlackCard to that players pile of BlackCardsWon
@@ -202,16 +197,9 @@ while not Done:
         
 ## check player scores and BlackCardsWon
 for i in range(NUMPLAYERS):
-    server.send_event("Your score: " + str(Players[i].Score), player_ID = i)
+    server.send_event("\nYour score: " + str(Players[i].Score), player_ID = i)
     server.send_event("Black Cards Earned: " + str(Players[i].BlackCardsWon).strip('[]'), player_ID = i)
 
-
-
-
-
-
-    
-    #print("Player ", i, "'s hand: ", Players[i].Hand)
 
 # (See README for what server functions are available)
 
