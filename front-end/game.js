@@ -1,4 +1,5 @@
 var card_num = 0;
+var selected_id = [];
 
 "use strict";
 
@@ -15,7 +16,7 @@ $(function(){
   });
   $("img").dblclick(function(){
     if(has_selected_card()){
-      selected_id = $(this).attr('id')
+      selected_id.push($(this).attr('id'));
       var card = $(this).attr('src');
       card_num = $(this).attr('alt');
       var style = $(this).attr('Style').replace(/ /g,'');
@@ -76,7 +77,9 @@ $(function(){
 })
 $(function(){
   $("#draw").click(function(){
-    // Get new card info and put the new pic in essentially
-    if(has_selected_card()){if(being_hovered($(`#${selected_id}`).attr("hidden", false)));}
+    selected_id.forEach(function(id){
+      // Get new card info and put the new pic in essentially
+      if(has_selected_card()){if(being_hovered($(`#${id}`).attr("hidden", false)));}
+    })
   })
 })
