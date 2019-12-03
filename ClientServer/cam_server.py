@@ -1,5 +1,6 @@
 from server_module import *
 import random
+import time
 
 # Please see README for how to add game logic to this program
 
@@ -8,8 +9,8 @@ import random
 
 ## Server stuff
 #host = "10.6.28.148" #Dan's Computer
-host = '10.6.26.177' #Ben's Computer
-#host = '10.6.28.230' #Isaac's Computer
+#host = '10.6.26.177' #Ben's Computer
+host = '10.6.28.230' #Isaac's Computer
 
 port = 1000
 server = open_server(host, port)
@@ -86,6 +87,7 @@ def CheckIfDone():
     for i in range(len(Players)):
         if Players[i].Score >= POINTSTOWIN:
             server.send_event("\n\nPlayer " + str(i) + " won!")
+            server.send_event("\nYou won, congrats!", player_ID = i)
             #print("\nPlayer ", i, " won!")
             return True
     return False
@@ -131,6 +133,7 @@ while not Done:
     if CardElderPosition > (NUMPLAYERS - 1):
         CardElderPosition = 0
     server.send_event("\n\nJUDGE FOR THIS ROUND IS: Player " + str(CardElderPosition))
+    server.send_event("\nYou are the judge for this round.", player_ID = CardElderPosition)
     ## draw a black card
     JudgesCard = DrawTopCard(BlackCards, True)
     ## for testing pick 2 cards
@@ -142,10 +145,10 @@ while not Done:
 
     ## retrieve the cards players want to play
     if IsPlayTwo:
-        server.send_event('\nWhich cards do you want to play? (first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
+        server.send_event('\nWhich cards do you want to play? (indexing starts at 0; first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
     else:
-        server.send_event('\nWhich card do you want to play? (give the index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
+        server.send_event('\nWhich card do you want to play? (indexing starts at 0; give one index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
 
     ## organize played cards data so it is easier to work with
@@ -182,7 +185,7 @@ while not Done:
         #thing = thing[0]
         toJudge.append(key)
     server.send_event("\nHere are the choices: " + str(toJudge).strip('[]'))
-    server.send_event("Which card won? (give the index):", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
+    server.send_event("Which card won? (indexing starts at 0; give the index):", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
     WinningIndexRaw = server.get_responses(num_needed = 1)
     WinningIndex = WinningIndexRaw[0][1]
     WinningCard = toJudge[int(WinningIndex)]
@@ -215,4 +218,5 @@ for i in range(NUMPLAYERS):
 
 
 server.send_event("Thanks for playing!")
-#server.close()
+time.sleep(1)
+server.close()
