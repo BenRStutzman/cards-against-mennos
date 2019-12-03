@@ -4,7 +4,6 @@ import time
 
 # Please see README for how to add game logic to this program
 
-
 ## Pregame stuff
 
 ## Server stuff
@@ -28,7 +27,7 @@ NUMPLAYERS = int(input("How many players want to play?: "))
 #TIME_LIMIT = int(input("What do you want the time limit to be?: "))
 
 print("Waiting for players...")
-while len(server.players) < NUMPLAYERS: #wait till you have enough players
+while len(server.players) < NUMPLAYERS: #wait to start game till you have enough players
     pass
 
 server.send_event('Welcome to Cards Against Mennonites!')
@@ -63,26 +62,19 @@ def DrawTopCard(deck, isBlack):
             DiscardWhiteCards.clear()
     randnum = random.randrange(0, len(deck), 1)
     card = deck.pop(randnum)
-    DiscardBlackCards.append(card)
+    if isBlack:
+        DiscardBlackCards.append(card)
+    else:
+        DiscardWhiteCards.append(card)
     return card
 
 def DrawWhiteCards(hand):
     while len(hand) < HANDSIZE:
         card = DrawTopCard(WhiteCards, False)
         hand.append(card)
-        DiscardWhiteCards.append(card)
 
 ## CAN ADD DIFFERENT GAME ENDING CONDITIONS
 def CheckIfDone():
-    ## simple for testing
-##    inp = input("Do you want to continue playing? ('y'/'n'): ")
-##    if inp == "y":
-##        return False
-##    elif inp == "n":
-##        return True
-##    else:
-##        return CheckIfDone()
-
     ## points to win
     for i in range(len(Players)):
         if Players[i].Score >= POINTSTOWIN:
@@ -180,9 +172,6 @@ while not Done:
     toJudge = []
     ## strip off the end part of the tuples that says who sent the card
     for key in keys:
-        #thing = list(thing)
-        #thing.pop(len(thing) - 1)
-        #thing = thing[0]
         toJudge.append(key)
     server.send_event("\nHere are the choices: " + str(toJudge).strip('[]'))
     server.send_event("Which card won? (indexing starts at 0; give the index):", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
@@ -197,26 +186,18 @@ while not Done:
     Players[WinningPlayer].Score += 1
     ## add BlackCard to that players pile of BlackCardsWon
     Players[WinningPlayer].BlackCardsWon.append(JudgesCard)
-    ## check if done playing
+    tallyscores = ""
+    for i in range(len(Players)):
+        tallyscores += "\nPlayer " + str(i) + "'s score: " + str(Players[i].Score)
+    server.send_event(tallyscores)
     Done = CheckIfDone()
 
-
-## check player scores and BlackCardsWon
+## send player scores and BlackCardsWon
 for i in range(NUMPLAYERS):
     server.send_event("\nYour score: " + str(Players[i].Score), player_ID = i)
     server.send_event("Black Cards Earned: " + str(Players[i].BlackCardsWon).strip('[]'), player_ID = i)
 
 
-# (See README for what server functions are available)
-
-
-# just an example of getting responses
-#server.send_event('What is your favorite letter?', time_lim = 10, num_chars = 1, exclude = )
-#responses = server.get_responses()
-#for player, response in responses:
-    #print("Player %s chose '%s'" % (player, response))
-
-
 server.send_event("Thanks for playing!")
-time.sleep(1)
+time.sleep(1) #makes sure there is time to complete other events
 server.close()
