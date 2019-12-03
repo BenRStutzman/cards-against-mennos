@@ -112,13 +112,13 @@ class GameServer(Server):
     def get_responses(self, num_needed = -1):
         if num_needed < 0:
             num_needed = len(self.players)
-        response_list = []
+        responses = []
         while self.responses.qsize() < num_needed:
             pass
         while not self.responses.empty():
-            response_list.append(self.responses.get())
-        responses = {ID: response for ID, response in sorted(response_list)}
-        for player_ID, response in responses.items():
+            responses.append(self.responses.get())
+        responses = sorted(responses)
+        for player_ID, response in responses:
             print("Player %s responded '%s'" % (player_ID, response))
         return responses
 

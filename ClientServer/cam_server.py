@@ -34,7 +34,7 @@ server.send_event('Players', details = ', '.join(
 server.send_event('What is your favorite letter?', time_lim = 10, num_chars = 1)
 responses = server.get_responses()
 
-winner_ID, winner_response = random.choice(list(responses.items()))
+winner_ID, winner_response = random.choice(responses)
 print("Player %d wins with '%s'" % (winner_ID, winner_response))
 server.send_event(server.players[winner_ID].username + ' wins!', exclude = winner_ID)
 server.send_event('You win!', player_ID = winner_ID)
