@@ -1,13 +1,16 @@
 from server_module import *
-import random 
+import random
 
 # Please see README for how to add game logic to this program
 
 
-## Pregame stuff 
+## Pregame stuff
 
 ## Server stuff
-host = "10.6.28.148"
+#host = "10.6.28.148" #Dan's Computer
+host = '10.6.26.177' #Ben's Computer
+#host = '10.6.28.230' #Isaac's Computer
+
 port = 1000
 server = open_server(host, port)
 
@@ -48,7 +51,7 @@ DiscardBlackCards = []
 DiscardWhiteCards = []
 Done = False
 
-## defining functions 
+## defining functions
 def DrawTopCard(deck, isBlack):
     if len(deck) == 0:
         if isBlack:
@@ -119,10 +122,10 @@ while not Done:
         DrawWhiteCards(Players[i].Hand)
         ## pass each Player their hand
         server.send_event("\nYour hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
-        
+
     ## initialize
     PlayedCards = []
-    
+
     ## increment CardElderPosition
     CardElderPosition += 1
     if CardElderPosition > (NUMPLAYERS - 1):
@@ -185,7 +188,7 @@ while not Done:
     WinningCard = toJudge[int(WinningIndex)]
     ## find the player that submitted the winning card
     #WinningPlayer = list(PlayedCardsB[PlayedCardsB.index(WinningCard)])[-1]
-    WinningPlayer = PlayedCardsB[WinningCard]        
+    WinningPlayer = PlayedCardsB[WinningCard]
     server.send_event("The judge chose player " + str(WinningPlayer) + "'s submission: " + str(WinningCard) + "!")
     ## increment winners score
     Players[WinningPlayer].Score += 1
@@ -193,8 +196,8 @@ while not Done:
     Players[WinningPlayer].BlackCardsWon.append(JudgesCard)
     ## check if done playing
     Done = CheckIfDone()
-    
-        
+
+
 ## check player scores and BlackCardsWon
 for i in range(NUMPLAYERS):
     server.send_event("\nYour score: " + str(Players[i].Score), player_ID = i)
