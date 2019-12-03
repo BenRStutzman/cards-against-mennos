@@ -72,7 +72,7 @@ class GameServer(Server):
         else:
             return False
 
-    def send_to_all(self, event, details, time_lim, num_chars, exclude = ""):
+    def send_to_all(self, event, details, time_lim, num_chars, exclude = -1):
         for ID in self.players.copy():
             if ID != exclude:
                 self.send_to_player(ID, event, details, time_lim, num_chars, from_all = True)
@@ -96,9 +96,9 @@ class GameServer(Server):
         return sorted(response_list)
 
     def send_event(self, event, details = '', player_ID = -1, time_lim = -1,
-                    num_chars = -1):
+                    num_chars = -1, exclude = -1):
         if player_ID == -1:
-            self.send_to_all(event, details, time_lim, num_chars)
+            self.send_to_all(event, details, time_lim, num_chars, exclude)
         else:
             self.send_to_player(player_ID, event, details, time_lim, num_chars)
 
