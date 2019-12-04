@@ -5,7 +5,7 @@ with python, you'll need to get pip or find another way to get flask).
 The idea is that each player can run the RUN_ME.py file on their own computer,
 which will run a server on their browser that displays stuff with javascript.
 
-Right now, javascript takes instructions from python, prompts the user,
+Right now, javascript takes instructions from python, prompts the user in the browser,
 and then sends back their response. But this can hopefully be made more complicated,
 like sending back the ID number of whichever card they clicked on or something.
 
