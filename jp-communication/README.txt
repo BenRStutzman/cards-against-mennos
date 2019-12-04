@@ -6,7 +6,7 @@ and then sends back their response. But this can hopefully be made more complica
 like sending back the ID number of whichever card they clicked on or something.
 
 To change the javascript stuff, change what's inside the get_response function
-at the bottom of template/index.html.
+at the top of template/index.html.
 
 The key to the python stuff is the exchange() function in RUN_ME, which takes
 a string of instructions as input and sends that to the javascript, then waits for
