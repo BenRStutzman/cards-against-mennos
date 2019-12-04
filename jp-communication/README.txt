@@ -1,3 +1,5 @@
+You may have to install flask (https://pypi.org/project/Flask/) before this works. Try it without, though.
+
 The idea is that each player can run the RUN_ME file on their own computer,
 which will run a server on their browser that displays stuff with javascript.
 
