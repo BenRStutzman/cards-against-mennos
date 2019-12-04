@@ -1,6 +1,8 @@
-You may have to install flask (https://pypi.org/project/Flask/) before this works. Try it without, though.
+For this to work, you need to have flask installed. To do this, just type
+"pip install flask" in command prompt. (If you don't have pip, which should come
+with python, you'll need to get pip or find another way to get flask).
 
-The idea is that each player can run the RUN_ME file on their own computer,
+The idea is that each player can run the RUN_ME.py file on their own computer,
 which will run a server on their browser that displays stuff with javascript.
 
 Right now, javascript takes instructions from python, prompts the user,
@@ -9,7 +11,7 @@ like sending back the ID number of whichever card they clicked on or something.
 
 ***Austin:***
 To change the javascript stuff, change what's inside the get_response function
-at the top of Lib/site-packages/templates/index.html.
+at the top of templates/index.html.
 
 The key to the python stuff is the exchange() function in RUN_ME, which takes
 a string of instructions as input and sends that to the javascript, then waits for

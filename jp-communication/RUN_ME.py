@@ -3,10 +3,10 @@ import sys, os, threading, time
 ## THIS IS THE KEY FUNCTION
 def exchange(message):
     # Sends "message" to the browser and waits for a response, then returns it
-    f = open('Lib\\site-packages\\py_to_js.txt', 'w')
+    f = open('py_to_js.txt', 'w')
     f.write(message)
     f.close()
-    response = read_and_reset('Lib\\site-packages\\js_to_py.txt')
+    response = read_and_reset('js_to_py.txt')
     return response
 
 def read_and_reset(filename):
@@ -25,7 +25,7 @@ def test_with_terminal():
         response = exchange(input('message to send to browser: '))
         print('browser says:', response)
 
-server = threading.Thread(target = os.system, args = {'"Lib\\site-packages\\flask" run'})
+server = threading.Thread(target = os.system, args = {'flask run'})
 server.start()
 
 print("starting server...")

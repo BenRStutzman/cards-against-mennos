@@ -26,7 +26,7 @@ def hello():
 
     # POST request
     if request.method == 'GET':
-        py_to_js = read_and_reset('Lib\\site-packages\\py_to_js.txt')
+        py_to_js = read_and_reset('py_to_js.txt')
         instructions = {'instructions': py_to_js}
         return jsonify(instructions)  # serialize and use JSON headers
 
@@ -36,7 +36,7 @@ def hello():
         #print("response:", end = ' ')
         js_to_py = request.get_json(force=True)['response']  # parse as JSON
         #print(js_to_py)
-        f = open('Lib\\site-packages\\js_to_py.txt', 'w+')
+        f = open('js_to_py.txt', 'w+')
         f.write(js_to_py)
         f.close()
         return 'OK', 200
