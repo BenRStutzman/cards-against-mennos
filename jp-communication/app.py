@@ -1,0 +1,44 @@
+from flask import Flask, jsonify, request, render_template
+import time, os, threading, sys
+
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+app = Flask(__name__)
+
+def read_and_reset(filename):
+    while True:
+        f = open(filename, 'r+')
+        message = f.readline().strip()
+        if message:
+            break
+        f.close()
+    f.truncate(0)
+    f.close()
+    return message
+
+@app.route('/hello', methods=['GET', 'POST'])
+def hello():
+
+    # POST request
+    if request.method == 'GET':
+        py_to_js = read_and_reset('py_to_js.txt')
+        instructions = {'instructions': py_to_js}
+        return jsonify(instructions)  # serialize and use JSON headers
+
+    # GET request
+    else:
+        #print('Incoming..')
+        #print("response:", end = ' ')
+        js_to_py = request.get_json(force=True)['response']  # parse as JSON
+        #print(js_to_py)
+        f = open('js_to_py.txt', 'w+')
+        f.write(js_to_py)
+        f.close()
+        return 'OK', 200
+
+@app.route('/')
+def test_page():
+    # look inside `templates` and serve `index.html`
+    return render_template('index.html')
