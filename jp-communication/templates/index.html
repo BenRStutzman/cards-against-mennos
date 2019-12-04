@@ -1,7 +1,22 @@
 <script>
-    // GET is the default method, so we don't need to set it
-    //exchange();
 
+
+    function get_response(instructions) {
+
+
+
+      // Change how the response is generated here
+      // Right now it just prompts the user and sets response to what they type in
+      var response = prompt(instructions)
+
+
+
+      return response
+    }
+
+
+
+    // Hopefully don't have to change anything below this line
     exchange()
 
     function exchange() {
@@ -30,10 +45,5 @@
             console.log(text);
             return window.location.reload()
         })
-      }
-
-      function get_response(instructions) {
-        var response = prompt(instructions)
-        return response
       }
 </script>

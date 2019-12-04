@@ -1,7 +1,10 @@
+# this is all background stuff and shouldn't have to be changed
+
 from flask import Flask, jsonify, request, render_template
 import time, os, threading, sys
-
 import logging
+
+#so it doesn't print every connection
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
