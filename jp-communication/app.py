@@ -13,7 +13,7 @@ app = Flask(__name__)
 def read_and_reset(filename):
     while True:
         f = open(filename, 'r+')
-        message = f.readline().strip()
+        message = f.read().strip()
         if message:
             break
         f.close()
@@ -26,9 +26,9 @@ def hello():
 
     # POST request
     if request.method == 'GET':
-        py_to_js = read_and_reset('py_to_js.txt')
-        instructions = {'instructions': py_to_js}
-        return jsonify(instructions)  # serialize and use JSON headers
+        instructions, time_lim = read_and_reset('py_to_js.txt').split('\n')
+        to_send = {'instructions': instructions, 'time_lim': time_lim}
+        return jsonify(to_send)  # serialize and use JSON headers
 
     # GET request
     else:

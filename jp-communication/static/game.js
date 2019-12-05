@@ -1,5 +1,6 @@
 var card_num = 0;
 var selected_id = [];
+var played_card = -1;
 
 "use strict";
 
@@ -66,12 +67,11 @@ $(function(){
   })
 })
 
-
-
-
 $(function(){
   $("#play").click(function(){
     //get the information about this card and push it to the server as an event
+    played_card = $("#selected_card").attr("alt").match(/card(\d)/)[1];
+    console.log(played_card)
     $("#selected_card").attr("hidden", true);
   })
 })
