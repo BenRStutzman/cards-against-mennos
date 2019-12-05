@@ -114,7 +114,7 @@ while not Done:
     ## everyone draw up to handsize
     for i in range(NUMPLAYERS):
         DrawWhiteCards(Players[i].Hand)
-        ## pass each Player their hand
+        ## pass each Player their hand 
         server.send_event("\nYour hand: " + str(Players[i].Hand).strip('[]'), player_ID = i)
 
     ## initialize
@@ -124,18 +124,18 @@ while not Done:
     CardElderPosition += 1
     if CardElderPosition > (NUMPLAYERS - 1):
         CardElderPosition = 0
+	
     server.send_event("\n\nJUDGE FOR THIS ROUND IS: Player " + str(CardElderPosition))
     server.send_event("\nYou are the judge for this round.", player_ID = CardElderPosition)
+	
     ## draw a black card
     JudgesCard = DrawTopCard(BlackCards, True)
-    ## for testing pick 2 cards
-    #JudgesCard = "Yes, my belief in _________ is consistent with my belief in __________. (pick 2)"
     ## check if black card is play 2
-    IsPlayTwo = (-1 != JudgesCard.find("(pick 2)"))
-    ## send every one the black card
+    IsPlayTwo = (-1 != JudgesCard.find("(pick 2)")) ## .find returns -1 if it does not find pick 2
+    ## send everyone the black card
     server.send_event("\nJUDGES CARD: " + str(JudgesCard))
 
-    ## retrieve the cards players want to play
+    ## retrieve the cards players want to play from all but the judge
     if IsPlayTwo:
         server.send_event('\nWhich cards do you want to play? (indexing starts at 0; first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
@@ -143,8 +143,7 @@ while not Done:
         server.send_event('\nWhich card do you want to play? (indexing starts at 0; give one index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
 
-    ## organize played cards data so it is easier to work with
-    #PlayedCardsB = []
+    ## organize played cards data into a dict with submitted cards as keys that store the player that sent the card
     PlayedCardsB = {}
     for i in range(len(PlayedCardsA)):
         PlayerSubmitting = PlayedCardsA[i][0]
@@ -159,28 +158,24 @@ while not Done:
             else:
                 Players[PlayerSubmitting].PlayWhiteCard(int(positions[1]))
                 Players[PlayerSubmitting].PlayWhiteCard(int(positions[0]))
-            #PlayedCardsB.append((Card1,Card2,PlayerSubmitting))
             PlayedCardsB[(Card1,Card2)] = PlayerSubmitting
         else:
             Card1 = Players[PlayerSubmitting].PlayWhiteCard(int(list(PlayedCardsA[i])[1]))
-            #PlayedCardsB.append((Card1,PlayerSubmitting))
             PlayedCardsB[Card1] = PlayerSubmitting
 
     ## make a shuffled list of PlayedCards to give to judge
     keys =  list(PlayedCardsB.keys())
     random.shuffle(keys)
-    toJudge = []
-    ## strip off the end part of the tuples that says who sent the card
-    for key in keys:
-        toJudge.append(key)
-    server.send_event("\nHere are the choices: " + str(toJudge).strip('[]'))
+	
+	## ask the judge to choose a winning card
+    server.send_event("\nHere are the choices: " + str(keys).strip('[]'))
     server.send_event("Which card won? (indexing starts at 0; give the index):", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
     WinningIndexRaw = server.get_responses(num_needed = 1)
-    WinningIndex = WinningIndexRaw[0][1]
-    WinningCard = toJudge[int(WinningIndex)]
-    ## find the player that submitted the winning card
-    #WinningPlayer = list(PlayedCardsB[PlayedCardsB.index(WinningCard)])[-1]
+    WinningIndex = WinningIndexRaw[0][1] ## WinningIndexRaw is an array of one tuple where the second index is the input from the judge
+    WinningCard = keys[int(WinningIndex)]
     WinningPlayer = PlayedCardsB[WinningCard]
+	
+	## increment scores and tell players important information
     server.send_event("The judge chose player " + str(WinningPlayer) + "'s submission: " + str(WinningCard) + "!")
     ## increment winners score
     Players[WinningPlayer].Score += 1
