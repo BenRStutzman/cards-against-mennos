@@ -1,43 +1,29 @@
-<script>
+<!doctype HTML>
+<html>
+  <head>
+    <script src="{{ url_for('static', filename='jquery-3.4.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+    <script src="{{ url_for('static', filename='exchanger.js') }}"></script>
+    <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
+  </head>
+<body>
 
-    function get_response(instructions) {
+  <p>This is my first JS code thingy.</p>
+  <br/>
+  <img id = card1 src = "{{ url_for('static', filename='ace_of_spades.png') }}" alt = "card1" Style = "height:300px; width: 200px; bottom:15px; left:0px;")>
+  <img id = card2 src = "{{ url_for('static', filename='2_of_spades.png') }}" alt = "card2" Style = "height:300px; width: 200px; bottom:15px; left:150px;">
+  <img id = card3 src = "{{ url_for('static', filename='3_of_spades.png') }}" alt = "card3" Style = "height:300px; width: 200px; bottom:15px; left:300px;">
+  <img id = card4 src = "{{ url_for('static', filename='4_of_spades.png') }}" alt = "card4" Style = "height:300px; width: 200px; bottom:15px; left:450px;">
+  <img id = card5 src = "{{ url_for('static', filename='5_of_spades.png') }}" alt = "card5" Style = "height:300px; width: 200px; bottom:15px; left:600px;">
+  <img id = card6 src = "{{ url_for('static', filename='6_of_spades.png') }}" alt = "card6" Style = "height:300px; width: 200px; bottom:15px; left:750px;">
+  <img id = card7 src = "{{ url_for('static', filename='7_of_spades.png') }}" alt = "card7" Style = "height:300px; width: 200px; bottom:15px; left:900px;">
+  <img id = selected_card src = "" alt ="" hidden = true>
 
 
-      // Change how the response is generated here
-      // Right now it just prompts the user and sets response to what they type in
-      var response = prompt(instructions)
 
 
+  <button id = "draw">Draw a Card</button>
+  <button id = "play">Play this Card</button>
 
-      return response
-    }
-    
-    // Hopefully don't have to change anything below this line
-    exchange()
-    function exchange() {
-        fetch('/hello')
-        .then(function (response) {
-                return response.text();
-        }).then(function (text) {
-                // Print the instructions as text
-                console.log('GET instruction text:');
-                console.log(text);
-                return text;
-        }).then(function (text) {
-            return fetch('/hello', {
-                // Specify the method
-                method: 'POST',
-                body: JSON.stringify({
-                    "response": get_response(JSON.parse(text)['instructions'])
-                })
-            })
-        }).then(function (response) {
-            return response.text();
-        }).then(function (text) {
-            console.log('POST response: ');
-            // Should be 'OK' if everything was successful
-            console.log(text);
-            return window.location.reload()
-        })
-      }
-</script>
+
+</body></html>

@@ -25,12 +25,15 @@ def test_with_terminal():
         response = exchange(input('message to send to browser: '))
         print('browser says:', response)
 
+f = open('js_to_py.txt', 'w')
+f.close()
+f = open('py_to_js.txt', 'w')
+f.close()
 server = threading.Thread(target = os.system, args = {'flask run'})
 server.start()
 
 print("starting server...")
-time.sleep(10)
-print('server ready.')
-input("Go to 127.0.0.1:5000 in your browser, then hit enter here")
+input("\nWait until server details appear below, then"
+        " go to 127.0.0.1:5000 in your browser and hit enter here.\n\n")
 
 test_with_terminal()
