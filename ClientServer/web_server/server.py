@@ -1,6 +1,6 @@
 
 import os
-
+import re
 from http.server import BaseHTTPRequestHandler
 
 from routes.main import routes
@@ -17,13 +17,18 @@ class Server(BaseHTTPRequestHandler):
     def do_GET(self):
         split_path = os.path.splitext(self.path)
         request_extension = split_path[1]
+        submitted = split_path[0]
 
         if request_extension is "" or request_extension is ".html":
             if self.path in routes:
                 handler = TemplateHandler()
                 handler.find(routes[self.path])
             else:
-                handler = BadRequestHandler()
+                regex = re.compile("word\d")
+                if(regex.match(submtted)):
+                    print("True")
+                else:
+                    handler = BadRequestHandler()
         elif request_extension is ".py":
             handler = BadRequestHandler()
         else:
@@ -33,6 +38,10 @@ class Server(BaseHTTPRequestHandler):
         self.respond({
             'handler': handler
         })
+
+    # def do_POST(self):
+    #     print('Hello World!')
+    #     print(self)
 
     def handle_http(self, handler):
         status_code = handler.getStatus()

@@ -14,7 +14,7 @@ $(function(){
       being_hovered($(this), 0);
     }
   });
-  $("img").dblclick(function(){
+  $("img").click(function(){
     if(has_selected_card()){
       selected_id.push($(this).attr('id'));
       var card = $(this).attr('src');
@@ -72,6 +72,11 @@ $(function(){
 $(function(){
   $("#play").click(function(){
     //get the information about this card and push it to the server as an event
+    data = {name: 'id', text:`A card with the id of ${selected_id[selected_id.length-1]} was just played.`}
+    $.get(`/${selected_id[selected_id.length-1]}`, function(data, status){
+      console.log(`${data} and ${status}`);
+    })
+    //for testing above
     $("#selected_card").attr("hidden", true);
   })
 })
