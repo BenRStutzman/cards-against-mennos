@@ -3,10 +3,11 @@ from browser_module import exchange, setup_server
 from dealer import deal
 import sys, msvcrt
 
-
+def time_lim_string(time_lim):
+    return "You have " + str(time_lim) + " seconds."
 
 host = input("Enter the host computer's IP address: ")
-port = input("Enter the port # being used on the host computer: ")
+port = 1000
 
 deal([], 'white')
 setup_server()
@@ -17,7 +18,7 @@ while keep_playing.lower() == 'y':
 
     client = GameClient(host, int(port))
     event = ''
-    deal(['1'], 'white')
+    deal([], 'white')
 
     while event != 'server closed':
         while client.events.empty():
@@ -28,16 +29,18 @@ while keep_playing.lower() == 'y':
             print(':', details)
         else:
             print()
-        if time_lim > 0 and num_chars > 0:
-            response = timed_input(
-                    str.format("Give a %d-character response within %d seconds: "
-                    % (num_chars, time_lim)), time_lim, num_chars)
-            client.send(response)
 
         if event == 'Your hand':
             deal(details.split(), 'white')
+            exchange("Here's your new hand.", 3)
+        elif event == 'Here are the choices':
+            deal(details.split(), 'white')
+            exchange("Here are the choices.", 3)
+        elif event == '\nChoose a card to play.' or event == 'Which card won?':
+            client.send(int(exchange(event + " " + time_lim_string(time_lim), time_lim)) - 1)
+            
         else:
-            exchange(event)
+            exchange(event, 3)
 
     client.stop()
     while msvcrt.kbhit(): #clears all previous keypresses

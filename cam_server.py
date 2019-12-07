@@ -18,7 +18,7 @@ server = open_server(host, port)
 HANDSIZE = 7
 NUMPLAYERS = 4
 POINTSTOWIN = 2
-TIME_LIMIT = 300
+TIME_LIMIT = 15
 
 ## Set constants
 #HANDSIZE = int(input("What handsize do you want to play with? (please be reasonable): "))
@@ -145,7 +145,7 @@ while not Done:
         server.send_event('\nWhich cards do you want to play? (indexing starts at 0; first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
     else:
-        server.send_event('\nWhich card do you want to play? (indexing starts at 0; give one index):', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
+        server.send_event('\nChoose a card to play.', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
 
     ## organize played cards data into a dict with submitted cards as keys that store the player that sent the card
@@ -174,7 +174,7 @@ while not Done:
 
 	## ask the judge to choose a winning card
     server.send_event("\nHere are the choices: " + str(keys).strip('[]'))
-    server.send_event("Which card won? (indexing starts at 0; give the index):", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
+    server.send_event("Which card won?", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
     WinningIndexRaw = server.get_responses(num_needed = 1)
     WinningIndex = WinningIndexRaw[0][1] ## WinningIndexRaw is an array of one tuple where the second index is the input from the judge
     WinningCard = keys[int(WinningIndex)]
