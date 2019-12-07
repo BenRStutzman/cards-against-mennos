@@ -1,8 +1,24 @@
 var card_num = 0;
 var selected_id = [];
-var played_card = -1;
+var current_cards = [];
+var played_card = -1
+var border_color = "white";
 
 "use strict";
+
+$("body").onload = (function(){
+  // recieve array of cards
+  // current_cards = recieved array of cards
+  current_cards.forEach(function(){
+    // do something
+  });
+})
+
+function setBorders(){
+  //$("img").style.border = '3px solid' + border_color;
+  //$("img").attr("Style") += " border: 3px solid " + border_color + ";";
+  $("img").css({'border':'3px solid ' + border_color});
+}
 
 $(function(){
   $("img").mouseenter(function(){
@@ -15,7 +31,7 @@ $(function(){
       being_hovered($(this), 0);
     }
   });
-  $("img").dblclick(function(){
+  $("img").click(function(){
     if(has_selected_card()){
       selected_id.push($(this).attr('id'));
       var card = $(this).attr('src');
@@ -23,11 +39,11 @@ $(function(){
       var style = $(this).attr('Style').replace(/ /g,'');
       $("#selected_card").attr({src: card,
                                 alt : card_num,
-                                Style : style + "border:3px solid black",
+                                Style : style + "border:3px solid " + border_color,
                                 hidden: false});
       $(this).attr("hidden", "true");
       var selected = $("#selected_card");
-      selected.css('border', '3px solid black');
+      selected.css('border', '3px solid ' + border_color);
       $(selected).animate({
         left: "400",
         bottom: "+=300"
@@ -40,9 +56,9 @@ $(function(){
 
 function being_hovered(pic, x){
   if(x){
-    pic.css({'border':'3px solid black', 'z-index': '1','width':'270', 'height':'400'});
+    pic.css({'border':'3px solid ' + border_color, 'z-index': '1','width':'270', 'height':'400'});
   } else {
-    pic.css({'border':'0px solid black', 'z-index': '-1','width':'200', 'height':'300'});
+    pic.css({'border':'3px solid ' + border_color, 'z-index': '-1','width':'200', 'height':'300'});
   }
 }
 
@@ -67,19 +83,19 @@ $(function(){
   })
 })
 
+
+
+
 $(function(){
   $("#play").click(function(){
-    //get the information about this card and push it to the server as an event
-    played_card = $("#selected_card").attr("alt").match(/card(\d)/)[1];
-    console.log(played_card)
+    played_card = $("#selected_card").attr('alt').match(/card(\d)/);
     $("#selected_card").attr("hidden", true);
   })
 })
-$(function(){
-  $("#draw").click(function(){
-    selected_id.forEach(function(id){
-      // Get new card info and put the new pic in essentially
-      if(has_selected_card()){if(being_hovered($(`#${id}`).attr("hidden", false)));}
-    })
-  })
-})
+
+
+// $(function play_again(){
+//   //begin new round
+//     exchange();
+//     console.log("They want to play again.");
+// })

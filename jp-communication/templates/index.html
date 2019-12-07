@@ -6,23 +6,20 @@
     <script src="{{ url_for('static', filename='exchanger.js') }}"></script>
     <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
   </head>
-<body>
+<body onload = "setBorders()" >
 
   <p id = instructions>Waiting for instructions...</p>
   <br/>
-  <img id = card1 src = "{{ url_for('static', filename='ace_of_spades.png') }}" alt = "card1" Style = "height:300px; width: 200px; bottom:15px; left:0px;">
-  <img id = card2 src = "{{ url_for('static', filename='2_of_spades.png') }}" alt = "card2" Style = "height:300px; width: 200px; bottom:15px; left:150px;">
-  <img id = card3 src = "{{ url_for('static', filename='3_of_spades.png') }}" alt = "card3" Style = "height:300px; width: 200px; bottom:15px; left:300px;">
-  <img id = card4 src = "{{ url_for('static', filename='4_of_spades.png') }}" alt = "card4" Style = "height:300px; width: 200px; bottom:15px; left:450px;">
-  <img id = card5 src = "{{ url_for('static', filename='5_of_spades.png') }}" alt = "card5" Style = "height:300px; width: 200px; bottom:15px; left:600px;">
-  <img id = card6 src = "{{ url_for('static', filename='6_of_spades.png') }}" alt = "card6" Style = "height:300px; width: 200px; bottom:15px; left:750px;">
-  <img id = card7 src = "{{ url_for('static', filename='7_of_spades.png') }}" alt = "card7" Style = "height:300px; width: 200px; bottom:15px; left:900px;">
+  <img id = card1 src = "{{ url_for('static', filename='card1.png') }}" alt = "card1" Style = "height:300px; width: 200px; bottom:15px; left:0px;">
+  <img id = card2 src = "{{ url_for('static', filename='card2.png') }}" alt = "card2" Style = "height:300px; width: 200px; bottom:15px; left:150px;">
+  <img id = card3 src = "{{ url_for('static', filename='card3.png') }}" alt = "card3" Style = "height:300px; width: 200px; bottom:15px; left:300px;">
+  <img id = card4 src = "{{ url_for('static', filename='card4.png') }}" alt = "card4" Style = "height:300px; width: 200px; bottom:15px; left:450px;">
+  <img id = card5 src = "{{ url_for('static', filename='card5.png') }}" alt = "card5" Style = "height:300px; width: 200px; bottom:15px; left:600px;">
+  <img id = card6 src = "{{ url_for('static', filename='card6.png') }}" alt = "card6" Style = "height:300px; width: 200px; bottom:15px; left:750px;">
+  <img id = card7 src = "{{ url_for('static', filename='card7.png') }}" alt = "card7" Style = "height:300px; width: 200px; bottom:15px; left:900px;">
   <img id = selected_card src = "" alt ="" hidden = true>
 
 
-
-
-  <button id = "draw">Draw a Card</button>
   <button id = "play">Play this Card</button>
 
 
