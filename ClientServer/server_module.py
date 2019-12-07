@@ -2,8 +2,8 @@ import sys
 import time
 import threading
 from queue import Queue
-from PodSixNet.Server import Server
-from PodSixNet.Channel import Channel
+from ClientServer.PodSixNet.Server import Server
+from ClientServer.PodSixNet.Channel import Channel
 
 def open_server(host, port):
     # host is a string and port is an integer
