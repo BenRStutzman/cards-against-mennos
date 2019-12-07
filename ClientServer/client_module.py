@@ -1,7 +1,7 @@
 from queue import Queue
 import sys
 import time
-from ClientServer.PodSixNet.Connection import connection, ConnectionListener
+from PodSixNet.Connection import connection, ConnectionListener
 import threading
 import msvcrt
 
