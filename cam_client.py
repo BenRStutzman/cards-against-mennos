@@ -17,7 +17,7 @@ while keep_playing.lower() == 'y':
 
     client = GameClient(host, int(port))
     event = ''
-    deal([], 'white')
+    deal(['1'], 'white')
 
     while event != 'server closed':
         while client.events.empty():
