@@ -53,6 +53,7 @@ class GameServer(Server):
     def AddPlayer(self, player):
         self.players[player.ID] = player
         print("(Player %s has joined the game)" % player.ID)
+        
         self.send_event("You are player #" + str(player.ID), player_ID = player.ID)
 
     def DelPlayer(self, player):
