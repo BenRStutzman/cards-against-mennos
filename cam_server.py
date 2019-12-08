@@ -17,8 +17,8 @@ server = open_server(host, port)
 ## default constants
 HANDSIZE = 7
 NUMPLAYERS = 4
-POINTSTOWIN = 2
-TIME_LIMIT = 15
+POINTSTOWIN = 3
+TIME_LIMIT = 30
 
 ## Set constants
 #HANDSIZE = int(input("What handsize do you want to play with? (please be reasonable): "))
@@ -38,14 +38,16 @@ server.send_event('Welcome to Cards Against Mennonites!')
 ## grab cards from text files
 BlackCards = []
 WhiteCards = []
-f = open("BlackCards.txt", "r")
+f = open("cards\\BlackCards.txt", "r")
 if f.mode == "r":
-    BlackCards = f.read().split("\n")
-f = open("WhiteCards.txt", "r")
+    BlackCards = f.read().splitlines()
+f = open("cards\\WhiteCards.txt", "r")
 if f.mode == "r":
-    WhiteCards = f.read().split("\n")
+    WhiteCards = f.read().splitlines()
 AllBlackCards = BlackCards.copy()
 AllWhiteCards = WhiteCards.copy()
+print(len(AllBlackCards))
+print(len(AllWhiteCards))
 
 ## initialization
 Players = []
@@ -130,8 +132,8 @@ while not Done:
     if CardElderPosition > (NUMPLAYERS - 1):
         CardElderPosition = 0
 
-    server.send_event("JUDGE FOR THIS ROUND IS: Player " + str(CardElderPosition))
-    server.send_event("You are the judge for this round.", player_ID = CardElderPosition)
+    server.send_event("The judge for this round is player " + str(CardElderPosition) + '.', exclude = CardElderPosition)
+    server.send_event("You are the judge for this round. Waiting for responses...", player_ID = CardElderPosition)
 
     ## draw a black card
     JudgesCard = DrawTopCard(BlackCards, True)
@@ -173,7 +175,8 @@ while not Done:
     random.shuffle(keys)
 
 	## ask the judge to choose a winning card
-    server.send_event("Here are the choices.", details = CardIDs(keys))
+    server.send_event("Here are the submissions.", details = CardIDs(keys))
+    server.send_event("These are the submissions. Waiting for the judge to decide...", exclude = CardElderPosition)
     server.send_event("Which card wins?", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
     WinningIndexRaw = server.get_responses(num_needed = 1)
     WinningIndex = WinningIndexRaw[0][1] ## WinningIndexRaw is an array of one tuple where the second index is the input from the judge

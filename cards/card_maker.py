@@ -58,14 +58,15 @@ def make_blank_card(card_color, ID):
 
     img.save(card_color + '/' + str(ID) + ".png")
 
-f = open('BlackCards.txt')
-cards = f.read().splitlines()
-for index, card in enumerate(cards):
-    make_card(card, 'black', index)
-f.close()
+if __name__ == '__main__':
+    f = open('BlackCards.txt')
+    cards = f.read().splitlines()
+    for index, card in enumerate(cards):
+        make_card(card, 'black', index)
+    f.close()
 
-f = open('WhiteCards.txt')
-cards = f.read().splitlines()
-for index, card in enumerate(cards):
-    make_card(card, 'white', index)
-f.close()
+    f = open('WhiteCards.txt')
+    cards = f.read().splitlines()
+    for index, card in enumerate(cards):
+        make_card(card, 'white', index)
+    f.close()

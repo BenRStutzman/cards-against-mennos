@@ -26,7 +26,7 @@ def hello():
 
     # POST request
     if request.method == 'GET':
-        instructions, time_lim = read_and_reset('py_to_js.txt').split('\n')
+        instructions, time_lim = read_and_reset('py_to_js.txt').split('$$$$$$$')
         to_send = {'instructions': instructions, 'time_lim': time_lim}
         return jsonify(to_send)  # serialize and use JSON headers
 

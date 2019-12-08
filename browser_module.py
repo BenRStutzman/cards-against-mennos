@@ -1,11 +1,11 @@
 import sys, os, threading, time
 from app import read_and_reset
 
-## THIS IS THE KEY FUNCTION
 def exchange(message, time_lim = 10):
     # Sends "message" to the browser and waits for a response, then returns it
+    open('js_to_py.txt', 'w').close()
     f = open('py_to_js.txt', 'w')
-    f.write(message + '\n' + str(time_lim))
+    f.write(message + '$$$$$$$' + str(time_lim))
     f.close()
     return read_and_reset('js_to_py.txt')
 
@@ -15,11 +15,10 @@ def test_with_terminal():
         print('browser says:', response)
 
 def setup_server():
-    f = open('js_to_py.txt', 'w')
-    f.close()
-    f = open('py_to_js.txt', 'w')
-    f.close()
+    open('js_to_py.txt', 'w').close()
+    open('py_to_js.txt', 'w').close()
     server = threading.Thread(target = os.system, args = {'flask run'})
+    server.daemon = True
     server.start()
 
     print("starting server...")
