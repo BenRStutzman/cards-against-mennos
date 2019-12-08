@@ -21,9 +21,8 @@ def setup_server():
     server.daemon = True
     server.start()
 
-    print("starting server...")
-    input("\nWait until server details appear below, then"
-            " go to 127.0.0.1:5000 in your browser and hit enter here.\n\n")
+    print("\nWhen server details appear below,"
+            " go to 127.0.0.1:5000 in your browser.\n")
 
 if __name__ == '__main__':
     setup_server()

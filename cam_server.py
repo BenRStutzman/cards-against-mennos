@@ -12,7 +12,6 @@ host = '10.6.26.177' #Ben's Computer
 #host = '10.6.28.230' #Isaac's Computer
 
 port = 1000
-server = open_server(host, port)
 
 ## default constants
 HANDSIZE = 7
@@ -25,6 +24,8 @@ TIME_LIMIT = 30
 NUMPLAYERS = int(input("How many players want to play?: "))
 #POINTSTOWIN = int(input("How many points do you need to win?: "))
 #TIME_LIMIT = int(input("What do you want the time limit to be?: "))
+
+server = open_server(host, port)
 
 print("Waiting for players...")
 while len(server.players) < NUMPLAYERS: #wait to start game till you have enough players

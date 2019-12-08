@@ -3,6 +3,9 @@ from browser_module import exchange, setup_server
 from dealer import deal, deal_black
 import sys, msvcrt, time
 
+open('js_to_py.txt', 'w').close()
+open('py_to_js.txt', 'w').close()
+
 def time_lim_string(time_lim):
     return "You have " + str(time_lim) + " seconds."
 
@@ -10,12 +13,15 @@ host = input("Enter the host computer's IP address: ")
 port = 1000
 
 f = open('static/instructions.txt', 'w')
-f.write('Hit enter in your terminal to join the game.')
+f.write('Play any blank card to join the game.')
 f.close()
+
 
 deal([])
 deal_black("-1")
 setup_server()
+
+exchange('refresh', 10000)
 
 keep_playing = 'y'
 
@@ -41,7 +47,7 @@ while keep_playing.lower() == 'y':
         if event == "Welcome to Cards Against Mennonites!":
             exchange("Welcome to Cards Against Mennonites!")
         '''
-        if event == "Here's your new hand." or event == "Here are the submissions":
+        if event == "Here's your new hand." or event == "Here are the submissions.":
             deal(details.split())
         elif event == "Here's the judge's card.":
             deal_black(details)
@@ -54,7 +60,7 @@ while keep_playing.lower() == 'y':
             f.write(event)
             f.close()
             exchange('refresh', 0) #update the page
-            time.sleep(10)
+            #time.sleep(10)
         elif (event == "You are the judge for this round. Waiting for responses..."):
             f = open('static/instructions.txt', 'a') #add to the instructions
             f.write(event)
@@ -86,6 +92,10 @@ while keep_playing.lower() == 'y':
                 response = '0'
             print("sending:", response)
             client.send(response)
+        elif event == 'server closed':
+            f = open('static/instructions.txt', 'a')
+            f.write('\n' + event)
+            f.close()
         else:
             f = open('static/instructions.txt', 'a') #anything else, just add to the instructions
             f.write(event + "\n")
