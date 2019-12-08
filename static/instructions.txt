@@ -1,5 +1,1 @@
-The judge chose player 0's submission: Handel's Messiah!
-Current Scores: Player 0: 2, Player 1: 2
-The judge for this round is player 0.
-Which card do you want to play?
-You have 30 seconds.
+Play any blank card to join the game.

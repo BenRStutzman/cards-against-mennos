@@ -4,8 +4,9 @@ var response_sent = false;
 // This is isn't declared as `async` because it already returns a promise
 
 function get_response() {
-  return played_card.toString();
+  var response = played_card.toString();
   played_card = -1;
+  return response;
 }
 
 function update_stuff() {
