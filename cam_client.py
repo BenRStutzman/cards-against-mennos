@@ -30,15 +30,11 @@ while keep_playing.lower() == 'y':
         else:
             print()
 
-        if event == 'Your hand':
+        if event == "Here's your new hand." or event == "Here are the choices.":
             deal(details.split(), 'white')
-            exchange("Here's your new hand.", 3)
-        elif event == 'Here are the choices':
-            deal(details.split(), 'white')
-            exchange("Here are the choices.", 3)
-        elif event == '\nChoose a card to play.' or event == 'Which card won?':
+            exchange(event, 3)
+        elif event == 'Which card do you want to play?' or event == 'Which card wins?':
             client.send(int(exchange(event + " " + time_lim_string(time_lim), time_lim)) - 1)
-            
         else:
             exchange(event, 3)
 

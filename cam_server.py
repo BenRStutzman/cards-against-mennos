@@ -86,7 +86,7 @@ def CheckIfDone():
             return True
     return False
 
-def HandIDs(hand):
+def CardIDs(hand):
     return ' '.join([str(AllWhiteCards.index(card)) for card in hand])
 
 class Player:
@@ -120,7 +120,7 @@ while not Done:
     for i in range(NUMPLAYERS):
         DrawWhiteCards(Players[i].Hand)
         ## pass each Player their hand
-        server.send_event("Your hand", details = HandIDs(Players[i].Hand), player_ID = i)
+        server.send_event("Here's your new hand.", details = CardIDs(Players[i].Hand), player_ID = i)
 
     ## initialize
     PlayedCards = []
@@ -130,8 +130,8 @@ while not Done:
     if CardElderPosition > (NUMPLAYERS - 1):
         CardElderPosition = 0
 
-    server.send_event("\n\nJUDGE FOR THIS ROUND IS: Player " + str(CardElderPosition))
-    server.send_event("\nYou are the judge for this round.", player_ID = CardElderPosition)
+    server.send_event("JUDGE FOR THIS ROUND IS: Player " + str(CardElderPosition))
+    server.send_event("You are the judge for this round.", player_ID = CardElderPosition)
 
     ## draw a black card
     JudgesCard = DrawTopCard(BlackCards, True)
@@ -142,10 +142,10 @@ while not Done:
 
     ## retrieve the cards players want to play from all but the judge
     if IsPlayTwo:
-        server.send_event('\nWhich cards do you want to play? (indexing starts at 0; first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
+        server.send_event('Which cards do you want to play? (indexing starts at 0; first index is first blank):', time_lim = TIME_LIMIT, num_chars = 2, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
     else:
-        server.send_event('\nChoose a card to play.', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
+        server.send_event('Which card do you want to play?', time_lim = TIME_LIMIT, num_chars = 1, exclude = CardElderPosition)
         PlayedCardsA = server.get_responses(num_needed = len(Players) - 1)
 
     ## organize played cards data into a dict with submitted cards as keys that store the player that sent the card
@@ -173,8 +173,8 @@ while not Done:
     random.shuffle(keys)
 
 	## ask the judge to choose a winning card
-    server.send_event("\nHere are the choices: " + str(keys).strip('[]'))
-    server.send_event("Which card won?", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
+    server.send_event("Here are the choices.", details = CardIDs(keys))
+    server.send_event("Which card wins?", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
     WinningIndexRaw = server.get_responses(num_needed = 1)
     WinningIndex = WinningIndexRaw[0][1] ## WinningIndexRaw is an array of one tuple where the second index is the input from the judge
     WinningCard = keys[int(WinningIndex)]
@@ -186,10 +186,11 @@ while not Done:
     Players[WinningPlayer].Score += 1
     ## add BlackCard to that players pile of BlackCardsWon
     Players[WinningPlayer].BlackCardsWon.append(JudgesCard)
-    tallyscores = ""
-    for i in range(len(Players)):
-        tallyscores += "\nPlayer " + str(i) + "'s score: " + str(Players[i].Score)
-    server.send_event(tallyscores)
+    tallyscores = "Current Scores: "
+    scores = sorted([(i, Players[i].Score) for i in range(len(Players))], key = lambda x: x[1], reverse = True)
+    for score in scores:
+        tallyscores += "Player " + str(score[0]) + ": " + str(score[1]) + ", "
+    server.send_event(tallyscores[:-2])
     Done = CheckIfDone()
 
 ## send player scores and BlackCardsWon
