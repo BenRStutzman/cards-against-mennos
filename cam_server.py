@@ -17,7 +17,7 @@ port = 1000
 HANDSIZE = 7
 NUMPLAYERS = 4
 POINTSTOWIN = 3
-TIME_LIMIT = 30
+TIME_LIMIT = 60
 
 ## Set constants
 #HANDSIZE = int(input("What handsize do you want to play with? (please be reasonable): "))
@@ -181,7 +181,10 @@ while not Done:
     server.send_event("Which card wins?", time_lim = TIME_LIMIT, num_chars = 1, player_ID = CardElderPosition)
     WinningIndexRaw = server.get_responses(num_needed = 1)
     WinningIndex = WinningIndexRaw[0][1] ## WinningIndexRaw is an array of one tuple where the second index is the input from the judge
-    WinningCard = keys[int(WinningIndex)]
+    try:
+        WinningCard = keys[int(WinningIndex)]
+    except:
+        WinningCard = keys[0]
     WinningPlayer = PlayedCardsB[WinningCard]
 
 	## increment scores and tell players important information

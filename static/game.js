@@ -89,6 +89,7 @@ $(function(){
 $(function(){
   $("#play").click(function(){
     played_card = $("#selected_card").attr('alt').match(/card(\d)/)[1];
+    console.log("played card: " + played_card);
     $("#selected_card").attr("hidden", true);
   })
 })

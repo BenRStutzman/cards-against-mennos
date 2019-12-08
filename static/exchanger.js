@@ -5,7 +5,7 @@ var response_sent = false;
 
 function get_response() {
   var response = played_card.toString();
-  played_card = -1;
+  console.log("response: " + response)
   return response;
 }
 
@@ -47,6 +47,10 @@ new Promise(function(resolve, reject) {
           }
           )
     .then(function(time_lim) {
+      played_card = -1;
+      return time_lim;
+    })
+    .then(function(time_lim) {
       /*
       setTimeout(function (time_lim) {
         card_played = parseInt(prompt('what card do you want to play?'));
@@ -79,6 +83,7 @@ function send_response() {
             "response": get_response()
         })
     }).then( function () {
+      played_card = -1;
       window.location.reload();
     })
     }
