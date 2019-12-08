@@ -138,7 +138,7 @@ while not Done:
     ## check if black card is play 2
     IsPlayTwo = (-1 != JudgesCard.find("(pick 2)")) ## .find returns -1 if it does not find pick 2
     ## send everyone the black card
-    server.send_event("\nJUDGES CARD: " + str(JudgesCard))
+    server.send_event("Here's the judge's card.", details = str(AllBlackCards.index(JudgesCard)))
 
     ## retrieve the cards players want to play from all but the judge
     if IsPlayTwo:

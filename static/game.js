@@ -46,7 +46,7 @@ $(function(){
       selected.css('border', '3px solid ' + border_color);
       $(selected).animate({
         left: "400",
-        bottom: "+=300"
+        bottom: "+=200"
         // width: "50px;"
       },500,function(){
       });
