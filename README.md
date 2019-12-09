@@ -1,4 +1,4 @@
-# cards-against-mennos
+# Cards Against the Mennonites
 Team project for Software Engineering
 
 Group Members by self-assigned role:
