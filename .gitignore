@@ -1,9 +1,9 @@
 __pycache__
-black_card.png
-card1.png
-card2.png
-card3.png
-card4.png
-card5.png
-card6.png
-card7.png
+static/black_card.png
+static/card1.png
+static/card2.png
+static/card3.png
+static/card4.png
+static/card5.png
+static/card6.png
+static/card7.png
