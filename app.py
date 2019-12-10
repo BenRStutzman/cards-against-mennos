@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 def read_and_reset(filename):
     while True:
+        time.sleep(0.1)
         f = open(filename, 'r+')
         message = f.read().strip()
         if message:
