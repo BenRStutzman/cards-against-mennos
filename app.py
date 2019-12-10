@@ -13,6 +13,7 @@ app = Flask(__name__)
 def read_and_reset(filename):
     #wait until there's something in the text file, read it, and clear the file.
     while True:
+        time.sleep(0.05) # so that it isn't a constain strain on the computer
         f = open(filename, 'r+')
         message = f.read().strip()
         if message:
