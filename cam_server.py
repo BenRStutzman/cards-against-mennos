@@ -12,9 +12,7 @@ import time
 # host = '10.6.28.230' #Isaac's Computer
 # host = '10.6.28.18' # Austin's Computer
 
-host = input("What is the IP address of this computer?")
-
-
+host = input("Enter the IP address of this computer: ")
 port = 1000
 
 ## default constants
@@ -187,7 +185,7 @@ while not Done:
     WinningIndex = WinningIndexRaw[0][1] ## WinningIndexRaw is an array of one tuple where the second index is the input from the judge
     try:
         WinningCard = keys[int(WinningIndex)]
-    except:
+    except IndexError:
         WinningCard = keys[0]
     WinningPlayer = PlayedCardsB[WinningCard]
 

@@ -1,4 +1,9 @@
-#Code from code-maven.com
+'''
+Functions for creating the images of the cards.
+Should only need to be used once, and again if card lists are changed.
+'''
+
+#PIL Code from code-maven.com
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -9,7 +14,7 @@ def make_card(text, card_color, ID):
     card_size = (300, 400)
     spacing = 35
     if card_color == 'black' and text[-1] not in ['.', '?', '!', ')', ':']:
-        text += '.'
+        text += '.' #add a period if there isn't one.
     fnt = ImageFont.truetype('C:/Windows/Fonts/' + font_name + '.ttf', font_size)
     words = text.split()
     lines = []
@@ -40,12 +45,13 @@ def make_card(text, card_color, ID):
     img = Image.new('RGB', card_size, color = background_color)
 
     d = ImageDraw.Draw(img)
-    for index, line in enumerate(lines):
+    for index, line in enumerate(lines): #draw the text onto the image
         d.text((10, 10 + index * spacing), line, font = fnt, fill = text_color)
 
     img.save(card_color + '/' + str(ID) + ".png")
 
 def make_blank_card(card_color, ID):
+    # this makes a blank card, for displaying as a filler
     card_size = (300, 400)
     if card_color == 'black':
         background_color = (0, 0, 0)
@@ -59,6 +65,7 @@ def make_blank_card(card_color, ID):
     img.save(card_color + '/' + str(ID) + ".png")
 
 if __name__ == '__main__':
+    # if this python file is run directly, remake all the black and white cards
     f = open('BlackCards.txt')
     cards = f.read().splitlines()
     for index, card in enumerate(cards):

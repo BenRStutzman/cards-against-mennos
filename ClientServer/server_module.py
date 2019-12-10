@@ -1,3 +1,8 @@
+'''
+Back-end functions for the connection between client and server
+These are used by cam_server.py
+'''
+
 import sys
 import time
 import threading

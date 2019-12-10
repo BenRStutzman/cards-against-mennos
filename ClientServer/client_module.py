@@ -1,3 +1,8 @@
+'''
+Back-end functions for the connection between client and server
+These are used by cam_client.py
+'''
+
 from queue import Queue
 import sys
 import time

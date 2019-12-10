@@ -11,6 +11,7 @@ log.setLevel(logging.ERROR)
 app = Flask(__name__)
 
 def read_and_reset(filename):
+    #wait until there's something in the text file, read it, and clear the file.
     while True:
         f = open(filename, 'r+')
         message = f.read().strip()
@@ -21,21 +22,20 @@ def read_and_reset(filename):
     f.close()
     return message
 
+#Flask stuff that I don't quite understand, taken from Andrew Healey
+#https://healeycodes.com/javascript/python/beginners/webdev/2019/04/11/talking-between-languages.html
 @app.route('/hello', methods=['GET', 'POST'])
 def hello():
 
-    # POST request
+    # GET request
     if request.method == 'GET':
         instructions, time_lim = read_and_reset('py_to_js.txt').split('$$$$$$$')
         to_send = {'instructions': instructions, 'time_lim': time_lim}
         return jsonify(to_send)  # serialize and use JSON headers
 
-    # GET request
+    # POST request
     else:
-        #print('Incoming..')
-        #print("response:", end = ' ')
         js_to_py = request.get_json(force=True)['response']  # parse as JSON
-        #print(js_to_py)
         f = open('js_to_py.txt', 'w+')
         f.write(js_to_py)
         f.close()
@@ -44,4 +44,5 @@ def hello():
 @app.route('/')
 def test_page():
     # look inside `templates` and serve `index.html`
+    # this is what actually creates the page
     return render_template('index.html')
