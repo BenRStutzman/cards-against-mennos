@@ -10,7 +10,9 @@ import time
 #host = "10.6.28.148" #Dan's Computer
 # host = '10.6.26.177' #Ben's Computer
 # host = '10.6.28.230' #Isaac's Computer
-host = '10.6.28.18' # Austin's Computer
+# host = '10.6.28.18' # Austin's Computer
+
+host = input("What is the IP address of this computer?")
 
 
 port = 1000
