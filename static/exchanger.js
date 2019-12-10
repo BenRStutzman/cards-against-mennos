@@ -47,7 +47,7 @@ new Promise(function(resolve, reject) {
 }).then(function(time_lim) {
     played_card = -1; //reset played_card to -1 (meaning you haven't played any yet)
     return time_lim;
-}.then(function(time_lim) {
+}).then(function(time_lim) {
     var i;
     for (i = 1000; i < time_lim; i += 1000) { //keep checking every second whether you've played a card
         setTimeout(function (i) {
@@ -62,7 +62,8 @@ new Promise(function(resolve, reject) {
             response_sent = true;
             send_response();
         }
-    }, time_lim);});
+    }, time_lim);
+});
 
 function send_response() {
     fetch('/hello', { //send the response as a JSON object
