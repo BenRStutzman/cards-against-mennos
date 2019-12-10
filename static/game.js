@@ -6,32 +6,22 @@ var border_color = "black";
 
 "use strict";
 
-$("body").onload = (function(){
-  // recieve array of cards
-  // current_cards = recieved array of cards
-  current_cards.forEach(function(){
-    // do something
-  });
-})
-
 function setBorders(){
-  //$("img").style.border = '3px solid' + border_color;
-  //$("img").attr("Style") += " border: 3px solid " + border_color + ";";
-  $("img").css({'border':'3px solid ' + border_color});
+  $(".white").css({'border':'3px solid ' + border_color});
 }
 
 $(function(){
-  $("img").mouseenter(function(){
+  $(".white").mouseenter(function(){
     if(has_selected_card()){
       being_hovered($(this), 1);
     }
   });
-  $("img").mouseleave(function(){
+  $(".white").mouseleave(function(){
     if(has_selected_card()){
       being_hovered($(this), 0);
     }
   });
-  $("img").click(function(){
+  $(".white").click(function(){
     if(has_selected_card()){
       selected_id.push($(this).attr('id'));
       var card = $(this).attr('src');

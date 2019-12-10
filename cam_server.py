@@ -8,8 +8,10 @@ import time
 
 ## Server stuff
 #host = "10.6.28.148" #Dan's Computer
-host = '10.6.26.177' #Ben's Computer
-#host = '10.6.28.230' #Isaac's Computer
+# host = '10.6.26.177' #Ben's Computer
+# host = '10.6.28.230' #Isaac's Computer
+host = '10.6.28.18' # Austin's Computer
+
 
 port = 1000
 
