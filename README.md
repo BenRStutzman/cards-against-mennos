@@ -1,5 +1,5 @@
 # Cards Against the Mennonites
-A digital, multiplayer version of the game "Cards Against the Mennonites"
+A digital, multiplayer version of the game "Cards Against the Mennonites" by S. L. Klassen.
 
 Team project for Software Engineering
 
