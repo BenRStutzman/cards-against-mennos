@@ -1,1 +1,5 @@
-You are player 0.
+The judge chose player 2's submission: Pacifism!
+Current Scores: Player 2: 1, Player 0: 0, Player 1: 0, Player 3: 0, Player 4: 0, Player 5: 0
+The judge for this round is player 1.
+Which card do you want to play?
+You have 600000 seconds.

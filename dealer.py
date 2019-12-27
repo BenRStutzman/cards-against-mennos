@@ -8,10 +8,12 @@ import os, shutil, re
 
 def deal(hand):
     # deal an entire hand of white cards, takes a list of card indices
+    '''
     for pic in os.scandir('static'): #clear the folder of white cards
         if re.search("card\d",str(pic)):
             file_path = "static/" + re.search("(card.*?png)",str(pic))[0]
             os.remove(file_path)
+    '''
     for index, num in enumerate(hand): #copy the new cards in
         shutil.copy("cards\\white\\" + num + ".png",
                     "static\\card" + str(index + 1) + ".png")
@@ -21,10 +23,12 @@ def deal(hand):
 
 def deal_black(ID):
     # deal the new black card into the folder
+    '''
     for pic in os.scandir('static'): #clear the folder of black cards
         if re.search("black_card",str(pic)):
             file_path = "static/" + re.search("(black_card.png)",str(pic))[0]
             os.remove(file_path)
+    '''
     shutil.copy("cards\\black\\" + ID + ".png", #copy it over
                 "static\\black_card.png")
 

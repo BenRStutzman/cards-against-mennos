@@ -63,8 +63,10 @@ while keep_playing.lower() == 'y': #keep looping through this until they're done
 
         if event == "Here's your new hand." or event == "Here are the submissions.":
             deal(details.split()) #deal the new cards into your hand
+            #time.sleep(3)
         elif event == "Here's the judge's card.":
             deal_black(details) #deal the new black card
+            #time.sleep(3)
         elif event.startswith('The judge chose'):
             f = open('static/instructions.txt', 'w') #clear the instruction log and add event
             f.write(event + "\n")
