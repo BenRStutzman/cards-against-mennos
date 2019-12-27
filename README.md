@@ -1,5 +1,12 @@
 # Cards Against the Mennonites
+A digital, multiplayer version of the game "Cards Against the Mennonites"
+
 Team project for Software Engineering
+
+![alt text](https://raw.githubusercontent.com/BenRStutzman/cards-against-mennos/master/Pictures/gameplay1.png)
+![alt text](https://raw.githubusercontent.com/BenRStutzman/cards-against-mennos/master/Pictures/gameplay3.png)
+![alt text](https://raw.githubusercontent.com/BenRStutzman/cards-against-mennos/master/Pictures/gameplay7.png)
+
 
 Group Members by self-assigned role:
 <br> Front End: Austin Engle and Ben Stutzman
