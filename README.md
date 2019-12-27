@@ -4,7 +4,9 @@ A digital, multiplayer version of the game "Cards Against the Mennonites"
 Team project for Software Engineering
 
 ![alt text](https://raw.githubusercontent.com/BenRStutzman/cards-against-mennos/master/Pictures/gameplay1.png)
+<br><br>
 ![alt text](https://raw.githubusercontent.com/BenRStutzman/cards-against-mennos/master/Pictures/gameplay3.png)
+<br><br>
 ![alt text](https://raw.githubusercontent.com/BenRStutzman/cards-against-mennos/master/Pictures/gameplay7.png)
 
 
