@@ -19,7 +19,7 @@ port = 1000
 HANDSIZE = 7
 NUMPLAYERS = 4
 POINTSTOWIN = 3
-TIME_LIMIT = 600000
+TIME_LIMIT = 30
 
 ## Set constants
 #HANDSIZE = int(input("What handsize do you want to play with? (please be reasonable): "))
